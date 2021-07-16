@@ -1,15 +1,15 @@
 NAME = so_long
-SRCS = ${shell find "." -name "*.c"}
+SRCS = main.c ${shell find "./sources" -name "*.c"}
 OBJS = ${SRCS:.c=.o}
 CC = gcc
 # CFLAGS = -Wall -Wextra -Werror
-MLX_FALGS = -Llibs/mlx -lmlx -framework OpenGL -framework AppKit
-MLX_PATH = libs/mlx
+MLX_FALGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
+MLX_PATH = libs/minilibx_mms/
 
 all : ${NAME}
 
 ${NAME} : ${OBJS}
-		${CC} ${FL} ${SRCS} -o ${NAME}
+		${CC} ${SRCS} ${MLX_FALGS} -o ${NAME}
 
 clean :
 		${RM} ${OBJS}
