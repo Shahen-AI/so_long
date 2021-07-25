@@ -1,5 +1,5 @@
 NAME = so_long
-SRCS = main.c ${shell find "./sources" -name "*.c"}
+SRCS = main.c ${shell find "./sources" -name "*.c" && find "./gnl" -name "*.c"}
 OBJS = ${SRCS:.c=.o}
 CC = gcc
 # CFLAGS = -Wall -Wextra -Werror
@@ -9,7 +9,7 @@ MLX_PATH = libs/minilibx_mms/
 all : ${NAME}
 
 ${NAME} : ${OBJS}
-		${CC} ${SRCS} ${MLX_FALGS} -o ${NAME}
+		${CC} libmlx.dylib ${SRCS} ${MLX_FALGS} -o ${NAME}
 
 clean :
 		${RM} ${OBJS}

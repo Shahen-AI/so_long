@@ -59,7 +59,6 @@ int	frame()
 {
 	key_hook();
 	mlx_clear_window(vars.mlx, vars.mlx_win);
-	// printf("test\n");
 	draw_image();
 	mlx_put_image_to_window(vars.mlx, vars.mlx_win, g_globs.data.img, 0, 0);
 	return (0);
@@ -68,14 +67,14 @@ int	frame()
 int	main(int argc, char **argv)
 {
 	t_data	data;
-	
+
+	parser(argc, argv);
 	vars.mlx = mlx_init();
 	glob_init();
 	vars.mlx_win = mlx_new_window(vars.mlx, g_globs.screenWidth, g_globs.screenHeight, "so_long");
 	g_globs.data.img = mlx_new_image(vars.mlx, g_globs.screenWidth, g_globs.screenHeight);
 	g_globs.data.addr = mlx_get_data_addr(g_globs.data.img, &g_globs.data.bits_per_pixel,
 			&g_globs.data.line_length, &g_globs.data.endian);
-	printf("tesdsadsadsat\n");
 	mlx_hook(vars.mlx_win, 17, 1L << 17, so_close, 0);
 	mlx_hook(vars.mlx_win, 2, 1L << 0, key_press, 0);
 	mlx_loop_hook(vars.mlx, frame, 0);

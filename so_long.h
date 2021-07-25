@@ -6,6 +6,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include "./gnl/get_next_line.h"
 
 struct s_long
 {
@@ -36,10 +37,17 @@ struct s_parsing
 	t_data	playerTEX;
 	int		screenHeight;
 	int		screenWidth;
+	int		mapHeight;
+	int		mapWidth;
 }			g_globs;
 
-int		parser(void);
+int		parser(int argc, char **argv);
 void	my_mlx_pixel_put(int x, int y, int color);
 void	draw_image();
+
+void	ft_error(char *str);
+void	ft_putstr(char *str);
+void	ft_putchar(char c);
+int		ft_strlen(char *str);
 
 #endif
