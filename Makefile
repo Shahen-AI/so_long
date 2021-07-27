@@ -2,7 +2,7 @@ NAME = so_long
 SRCS = main.c ${shell find "./sources" -name "*.c" && find "./gnl" -name "*.c"}
 OBJS = ${SRCS:.c=.o}
 CC = gcc
-# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 MLX_FALGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 MLX_PATH = libs/minilibx_mms/
 

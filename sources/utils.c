@@ -27,3 +27,22 @@ void	ft_error(char *str)
 	ft_putstr(str);
 	exit(0);
 }
+
+void	ft_putnbr(int nb)
+{
+	long n;
+
+	n = nb;
+	if (n < 0)
+	{
+		ft_putchar('-');
+		n *= (-1);
+	}
+	if (n >= 10)
+	{
+		ft_putnbr(n / 10);
+		ft_putnbr(n % 10);
+	}
+	else
+		ft_putchar(n + '0');
+}

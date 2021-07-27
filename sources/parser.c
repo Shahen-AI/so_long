@@ -6,7 +6,7 @@ int ones_check(char *line, int a)
 	
 	if (!ft_strlen(line))
 		return (0);
-	if (g_globs.mapWidth == 0 || a == 0)
+	if (g_globs.mapHeight == 0 || a == 0)
 	{
 		while (i < ft_strlen(line))
 		{
@@ -37,33 +37,73 @@ void sym_check(char *line)
 				ft_error("\n");
 			}
 	}
-	
 }
 
-int	parser(int argc, char **argv)
+void	map_alloc()
+{
+	int i;
+
+	i = 0;
+	if (!(g_globs.map = (char **)malloc((g_globs.mapHeight + 1) * sizeof(char *))))
+		ft_error("Error : allocation error.\n");
+	while (i < g_globs.mapHeight)
+	{
+		if (!(g_globs.map[i] = (char *)malloc((g_globs.mapWidth + 1) * sizeof(char *))))
+			ft_error("Error : allocation error.\n");
+		++i;
+	}
+	g_globs.map[i] = NULL;
+}
+
+void	map_fill(int fd)
+{
+	map_alloc();
+	int a = 1, i, j = 0;
+	char *line;
+
+	while(a)
+	{
+		i = 0;
+		a = get_next_line(fd, &line);
+		while (i < g_globs.mapWidth)
+		{
+			g_globs.map[j][i] = line[i];
+			++i;
+		}
+		g_globs.map[j][i] = '\0';
+		++j;
+	}
+}
+
+void	parser(int argc, char **argv)
 {
 	if (argc == 1)
-		ft_error("You have forgotten the map file, BITCH!!!\n");
+		ft_error("Please enter the map file!\n");
 	else if (argc > 2)
-		ft_error("Too many arguments.\n");
+		ft_error("Error : Too many arguments.\n");
 	int fd = open(argv[1], 0666);
+	if (fd < 3)
+		ft_error("Error : Can't open the file.\n");
 	int a = 1;
 	char *line = NULL;
 	g_globs.mapWidth = 0;
 	while (a > 0)
 	{
 		if (!line)
-			g_globs.mapHeight = 0;
+			g_globs.mapWidth = 0;
 		else
-			g_globs.mapHeight = ft_strlen(line);
+			g_globs.mapWidth = ft_strlen(line);
 		a = get_next_line(fd, &line);
-		if (g_globs.mapHeight > 0 && a)
+		if (g_globs.mapWidth > 0 && a)
 			sym_check(line);
-		if (g_globs.mapHeight > 0 && g_globs.mapHeight != ft_strlen(line))
-			ft_error("Map isn't a rectangle.\n");
+		if (g_globs.mapWidth > 0 && g_globs.mapWidth != ft_strlen(line))
+			ft_error("Error : Map isn't a rectangle.\n");
 		if (!ones_check(line, a))
-			ft_error("Map isn't surrounded by walls.\n");
-		++g_globs.mapWidth;
+			ft_error("Error : Map isn't surrounded by walls.\n");
+		++g_globs.mapHeight;
 	}
-	return (0);
+	close(fd);
+	fd = open(argv[1], 0666);
+	map_fill(fd);
+	close(fd);
 }

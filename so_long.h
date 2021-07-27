@@ -39,9 +39,14 @@ struct s_parsing
 	int		screenWidth;
 	int		mapHeight;
 	int		mapWidth;
+	char	**map;
+	int		side;
+	int		posX;
+	int		posY;
+	int		steps;
 }			g_globs;
 
-int		parser(int argc, char **argv);
+void	parser(int argc, char **argv);
 void	my_mlx_pixel_put(int x, int y, int color);
 void	draw_image();
 
@@ -49,5 +54,6 @@ void	ft_error(char *str);
 void	ft_putstr(char *str);
 void	ft_putchar(char c);
 int		ft_strlen(char *str);
+void	ft_putnbr(int nb);
 
 #endif
