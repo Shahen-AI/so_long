@@ -67,6 +67,12 @@ void	map_fill(int fd)
 		a = get_next_line(fd, &line);
 		while (i < g_globs.mapWidth)
 		{
+			if (line[i] == 'P')
+				++g_globs.Pcount;
+			if (line[i] == 'E')
+				++g_globs.Ecount;
+			if (line[i] == 'C')
+				++g_globs.Ccount;
 			g_globs.map[j][i] = line[i];
 			++i;
 		}
@@ -106,4 +112,14 @@ void	parser(int argc, char **argv)
 	fd = open(argv[1], 0666);
 	map_fill(fd);
 	close(fd);
+	if (g_globs.Pcount == 0)
+		ft_error("You don't set players position!\n");
+	if (g_globs.Ecount == 0)
+		ft_error("You don't have an exit!\n");
+	if (g_globs.Ccount == 0)
+		ft_error("You don't have collectibles!\n");
+	if (g_globs.Pcount > 1)
+		ft_error("Error : Too many player positions!\n");
+	if (g_globs.Ecount > 1)
+		ft_error("Error : Too many exit positions!\n");
 }

@@ -31,9 +31,13 @@ int	key_hook()
 		if (g_globs.map[g_globs.posY][g_globs.posX - 1] != '1')
 		{
 			if (g_globs.map[g_globs.posY][g_globs.posX - 1] == 'C')
+			{
 				g_globs.map[g_globs.posY][g_globs.posX - 1] = '0';
+				--g_globs.Ccount;
+			}
 			if (g_globs.map[g_globs.posY][g_globs.posX - 1] == 'E')
-				so_close(); 
+				if (g_globs.Ccount == 0)
+					so_close();
 			--g_globs.posX;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -47,9 +51,13 @@ int	key_hook()
 		if (g_globs.map[g_globs.posY][g_globs.posX + 1] != '1')
 		{
 			if (g_globs.map[g_globs.posY][g_globs.posX + 1] == 'C')
+			{
 				g_globs.map[g_globs.posY][g_globs.posX + 1] = '0';
+				--g_globs.Ccount;
+			}
 			if (g_globs.map[g_globs.posY][g_globs.posX + 1] == 'E')
-				so_close();
+				if (g_globs.Ccount == 0)
+					so_close();
 			++g_globs.posX;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -63,9 +71,13 @@ int	key_hook()
 		if (g_globs.map[g_globs.posY - 1][g_globs.posX] != '1')
 		{
 			if (g_globs.map[g_globs.posY - 1][g_globs.posX] == 'C')
+			{
 				g_globs.map[g_globs.posY - 1][g_globs.posX] = '0';
+				--g_globs.Ccount;
+			}
 			if (g_globs.map[g_globs.posY - 1][g_globs.posX] == 'E')
-				so_close();
+				if (g_globs.Ccount == 0)
+					so_close();
 			--g_globs.posY;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -79,9 +91,13 @@ int	key_hook()
 		if (g_globs.map[g_globs.posY + 1][g_globs.posX] != '1')
 		{
 			if (g_globs.map[g_globs.posY + 1][g_globs.posX] == 'C')
+			{
 				g_globs.map[g_globs.posY + 1][g_globs.posX] = '0';
+				--g_globs.Ccount;
+			}
 			if (g_globs.map[g_globs.posY + 1][g_globs.posX] == 'E')
-				so_close();
+				if (g_globs.Ccount == 0)
+					so_close();
 			++g_globs.posY;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -93,12 +109,16 @@ int	key_hook()
 	return (0);
 }
 
-void	glob_init()
+void	glob_init(int argc, char **argv)
 {
 	int i = 0, j;
 
 	g_globs.steps = 0;
 	g_globs.side = 50;
+	g_globs.Pcount = 0;
+	g_globs.Ecount = 0;
+	g_globs.Ccount = 0;
+	parser(argc, argv);
 	g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
 	g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
 	while (i < g_globs.mapHeight)
@@ -111,7 +131,7 @@ void	glob_init()
 			++j;
 		}
 		if (g_globs.map[i][j] == 'P')
-				break ;
+			break ;
 		++i;
 	}
 	g_globs.map[i][j] = '0';
@@ -130,9 +150,15 @@ int	frame()
 
 int	main(int argc, char **argv)
 {
-	parser(argc, argv);
-	glob_init();
+	glob_init(argc, argv);
+	int W,H;
 	vars.mlx = mlx_init();
+	mlx_get_screen_size(vars.mlx, &W, &H);
+	// if (g_globs.mapHeight > 22)
+	// {
+	// 	g_globs.
+	// }
+	printf("h - %d, w - %d\n", H, W);
 	vars.mlx_win = mlx_new_window(vars.mlx, g_globs.screenWidth, g_globs.screenHeight, "so_long");
 	g_globs.data.img = mlx_new_image(vars.mlx, g_globs.screenWidth, g_globs.screenHeight);
 	g_globs.data.addr = mlx_get_data_addr(g_globs.data.img, &g_globs.data.bits_per_pixel,

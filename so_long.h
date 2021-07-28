@@ -44,6 +44,9 @@ struct s_parsing
 	int		posX;
 	int		posY;
 	int		steps;
+	int		Pcount;
+	int		Ccount;
+	int		Ecount;
 }			g_globs;
 
 void	parser(int argc, char **argv);

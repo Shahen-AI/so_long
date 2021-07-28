@@ -46,15 +46,25 @@ void	draw_image()
 		while (j < g_globs.mapWidth)
 		{
 			if (g_globs.map[i][j] == '1')
+			{
 				draw_square(j, i, 0x00FF5733);
+			}
 			if (g_globs.map[i][j] == '0')
+			{
 				draw_square(j, i, 0x00726457);
-			if (i == g_globs.posY && j == g_globs.posX)
-				draw_square(j, i, 0x00E7DBD0);
-			if (g_globs.map[i][j] == 'C')
-				draw_square(j, i, 0x00F2C136);
+			}
 			if (g_globs.map[i][j] == 'E')
+			{
 				draw_square(j, i, 0x009ACD32);
+			}
+			if (i == g_globs.posY && j == g_globs.posX)
+			{
+				draw_square(j, i, 0x00E7DBD0);
+			}
+			if (g_globs.map[i][j] == 'C')
+			{
+				draw_square(j, i, 0x00F2C136);
+			}
 			++j;
 		}
 		++i;
