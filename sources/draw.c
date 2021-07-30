@@ -1,19 +1,19 @@
 #include "../so_long.h"
 
-void	my_mlx_pixel_put(int x, int y, int color)
+void	my_mlx_pixel_put(int x, int y, int color, t_data *data)
 {
 	char    *dst;
 
-	dst = g_globs.data.addr + (y * g_globs.data.line_length + x * (g_globs.data.bits_per_pixel / 8));
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
-int		get_pixel(int x, int y)
+int		get_pixel(int x, int y, t_data *data)
 {
 	char	*dst;
 	int		color;
 
-	dst = g_globs.data.addr + (y * g_globs.data.line_length + x * (g_globs.data.bits_per_pixel / 8));
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	color = *(unsigned int*)dst;
 	return (color);
 }
@@ -29,7 +29,29 @@ void	draw_square(int i, int j, int color)
 		y = 0;
 		while (y < g_globs.side)
 		{
-			my_mlx_pixel_put(i * g_globs.side + y, j * g_globs.side + x, color);
+			my_mlx_pixel_put(i * g_globs.side + y, j * g_globs.side + x, color, &g_globs.data);
+			++y;
+		}
+		++x;
+	}
+}
+
+void	draw_tex(int i, int j, t_data *data)
+{
+	int x;
+	int y;
+	unsigned int color;
+
+	x = 0;
+	while (x < g_globs.side)
+	{
+		y = 0;
+		while (y < g_globs.side)
+		{
+			color = get_pixel(y, x, data);
+			if (color == 0xFF000000)
+				color = 0x00d3d3d3;
+			my_mlx_pixel_put(i * g_globs.side + y, j * g_globs.side + x, color, &g_globs.data);
 			++y;
 		}
 		++x;
@@ -46,25 +68,15 @@ void	draw_image()
 		while (j < g_globs.mapWidth)
 		{
 			if (g_globs.map[i][j] == '1')
-			{
-				draw_square(j, i, 0x00FF5733);
-			}
+				draw_tex(j, i, &g_globs.wallTEX); // 0x00C39B77
 			if (g_globs.map[i][j] == '0')
-			{
-				draw_square(j, i, 0x00726457);
-			}
+				draw_square(j, i, 0x00d3d3d3);
 			if (g_globs.map[i][j] == 'E')
-			{
-				draw_square(j, i, 0x009ACD32);
-			}
+				draw_tex(j, i, &g_globs.exitTEX);
 			if (i == g_globs.posY && j == g_globs.posX)
-			{
-				draw_square(j, i, 0x00E7DBD0);
-			}
+				draw_tex(j, i, &g_globs.playerTEX);
 			if (g_globs.map[i][j] == 'C')
-			{
-				draw_square(j, i, 0x00F2C136);
-			}
+				draw_tex(j, i, &g_globs.collTEX);
 			++j;
 		}
 		++i;

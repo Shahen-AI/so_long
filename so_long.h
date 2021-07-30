@@ -12,6 +12,8 @@ struct s_long
 {
 	void	*mlx;
 	void	*mlx_win;
+	void	*mlxend;
+	void	*mlx_winend;
 }			vars;
 
 struct s_mov
@@ -35,6 +37,10 @@ struct s_parsing
 {
 	t_data	data;
 	t_data	playerTEX;
+	t_data	exitTEX;
+	t_data	collTEX;
+	t_data	wallTEX;
+	t_data	end;
 	int		screenHeight;
 	int		screenWidth;
 	int		mapHeight;
@@ -50,7 +56,8 @@ struct s_parsing
 }			g_globs;
 
 void	parser(int argc, char **argv);
-void	my_mlx_pixel_put(int x, int y, int color);
+void	my_mlx_pixel_put(int x, int y, int color, t_data *data);
+int		get_pixel(int x, int y, t_data *data);
 void	draw_image();
 
 void	ft_error(char *str);
