@@ -77,6 +77,8 @@ void	draw_image()
 				draw_tex(j, i, &g_globs.playerTEX);
 			if (g_globs.map[i][j] == 'C')
 				draw_tex(j, i, &g_globs.collTEX);
+			if (g_globs.map[i][j] == 'M')
+				draw_tex(j, i, &g_globs.enemTEX);
 			++j;
 		}
 		++i;

@@ -29,7 +29,7 @@ void sym_check(char *line)
 
 	while (++i < ft_strlen(line) - 1)
 	{
-		if (line[i] != '1' && line[i] != '0' &&
+		if (line[i] != '1' && line[i] != '0' && line[i] != 'M' &&
 			line[i] != 'P' && line[i] != 'C' && line[i] != 'E')
 			{
 				ft_putstr("Shit detected - ");

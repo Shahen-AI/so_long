@@ -2,19 +2,20 @@
 
 int	so_close()
 {
+	system("killall afplay");
 	exit(0);
 	return (0);
 }
 
 int	key_press(int keycode)
 {
-	if (keycode == 0)
+	if (keycode == 0 && !g_globs.blocker)
 		key_mov.left = 1;
-	if (keycode == 1)
+	if (keycode == 1 && !g_globs.blocker)
 		key_mov.down = 1;
-	if (keycode == 2)
+	if (keycode == 2 && !g_globs.blocker)
 		key_mov.right = 1;
-	if (keycode == 13)
+	if (keycode == 13 && !g_globs.blocker)
 		key_mov.up = 1;
 	if (keycode == 53)
 	{
@@ -24,14 +25,36 @@ int	key_press(int keycode)
 	return (0);
 }
 
-void end_of_game()
+void end_of_game(int a)
 {
 	int W,H;
 
+	g_globs.blocker = 1;
 	vars.mlxend = mlx_init();
-	vars.mlx_winend = mlx_new_window(vars.mlxend, 480, 640, "Sherlocked");
-	g_globs.end.img = mlx_xpm_file_to_image(vars.mlx, "./imgs/TheEnd.xpm", &W, &H);
+	if (a == 0)
+	{
+		vars.mlx_winend = mlx_new_window(vars.mlxend, 480, 640, "Sherlocked");
+		g_globs.end.img = mlx_xpm_file_to_image(vars.mlx, "./imgs/TheEnd.xpm", &W, &H);
+		int z = fork();
+		if (!z)
+		{
+			system("afplay ./mp3/Victory.mp3");
+			exit (0);
+		}
+	}
+	else
+	{
+		vars.mlx_winend = mlx_new_window(vars.mlxend, 490, 490, "Miss Me?");
+		g_globs.end.img = mlx_xpm_file_to_image(vars.mlx, "./imgs/Moriarty.xpm", &W, &H);
+		int z = fork();
+		if (!z)
+		{
+			system("afplay ./mp3/MissMe.mp3");
+			exit (0);
+		}
+	}
 	mlx_put_image_to_window(vars.mlxend, vars.mlx_winend, g_globs.end.img, 0, 0);
+	mlx_hook(vars.mlx_winend, 2, 1L << 0, key_press, 0);
 }
 
 int	key_hook()
@@ -47,10 +70,9 @@ int	key_hook()
 			}
 			if (g_globs.map[g_globs.posY][g_globs.posX - 1] == 'E')
 				if (g_globs.Ccount == 0)
-				{
-					end_of_game();
-					// so_close();
-				}
+					end_of_game(0);
+			if (g_globs.map[g_globs.posY][g_globs.posX - 1] == 'M')
+				end_of_game(1);
 			--g_globs.posX;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -70,11 +92,9 @@ int	key_hook()
 			}
 			if (g_globs.map[g_globs.posY][g_globs.posX + 1] == 'E')
 				if (g_globs.Ccount == 0)
-				{
-					end_of_game();
-					// mlx_destroy_window(vars.mlx, vars.mlx_win);
-					// so_close();
-				}
+					end_of_game(0);
+			if (g_globs.map[g_globs.posY][g_globs.posX + 1] == 'M')
+				end_of_game(1);
 			++g_globs.posX;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -94,10 +114,9 @@ int	key_hook()
 			}
 			if (g_globs.map[g_globs.posY - 1][g_globs.posX] == 'E')
 				if (g_globs.Ccount == 0)
-				{
-					end_of_game();
-					// so_close();
-				}
+					end_of_game(0);
+			if (g_globs.map[g_globs.posY - 1][g_globs.posX] == 'M')
+				end_of_game(1);
 			--g_globs.posY;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -117,10 +136,9 @@ int	key_hook()
 			}
 			if (g_globs.map[g_globs.posY + 1][g_globs.posX] == 'E')
 				if (g_globs.Ccount == 0)
-				{
-					end_of_game();
-					// so_close();
-				}
+					end_of_game(0);
+			if (g_globs.map[g_globs.posY + 1][g_globs.posX] == 'M')
+				end_of_game(1);
 			++g_globs.posY;
 			++g_globs.steps;
 			ft_putstr("Steps count : ");
@@ -141,6 +159,7 @@ void	glob_init(int argc, char **argv)
 	g_globs.Pcount = 0;
 	g_globs.Ecount = 0;
 	g_globs.Ccount = 0;
+	g_globs.blocker = 0;
 	parser(argc, argv);
 	g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
 	g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
@@ -177,12 +196,12 @@ int	main(int argc, char **argv)
 	int W,H, texW, texH;
 	vars.mlx = mlx_init();
 	mlx_get_screen_size(vars.mlx, &W, &H);
+	printf("h - %d, w - %d\n", H, W);
 	if (g_globs.mapHeight > 22 && g_globs.mapWidth > 42)
 	{
 		g_globs.screenWidth = W;
 		g_globs.screenHeight = H;
 	}
-	printf("h - %d, w - %d\n", H, W);
 	vars.mlx_win = mlx_new_window(vars.mlx, g_globs.screenWidth, g_globs.screenHeight, "so_long");
 	g_globs.data.img = mlx_new_image(vars.mlx, g_globs.screenWidth, g_globs.screenHeight);
 	g_globs.data.addr = mlx_get_data_addr(g_globs.data.img, &g_globs.data.bits_per_pixel,
@@ -203,6 +222,10 @@ int	main(int argc, char **argv)
 	g_globs.playerTEX.img = mlx_xpm_file_to_image(vars.mlx, "./imgs/player.xpm", &texW, &texH);
 	g_globs.playerTEX.addr = mlx_get_data_addr(g_globs.playerTEX.img, &g_globs.playerTEX.bits_per_pixel,
 			&g_globs.playerTEX.line_length, &g_globs.playerTEX.endian);
+
+	g_globs.enemTEX.img = mlx_xpm_file_to_image(vars.mlx, "./imgs/enemy.xpm", &texW, &texH);
+	g_globs.enemTEX.addr = mlx_get_data_addr(g_globs.enemTEX.img, &g_globs.enemTEX.bits_per_pixel,
+			&g_globs.enemTEX.line_length, &g_globs.enemTEX.endian);
 
 	mlx_hook(vars.mlx_win, 17, 1L << 17, so_close, 0);
 	mlx_hook(vars.mlx_win, 2, 1L << 0, key_press, 0);

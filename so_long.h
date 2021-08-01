@@ -40,6 +40,7 @@ struct s_parsing
 	t_data	exitTEX;
 	t_data	collTEX;
 	t_data	wallTEX;
+	t_data	enemTEX;
 	t_data	end;
 	int		screenHeight;
 	int		screenWidth;
@@ -53,6 +54,7 @@ struct s_parsing
 	int		Pcount;
 	int		Ccount;
 	int		Ecount;
+	int		blocker;
 }			g_globs;
 
 void	parser(int argc, char **argv);
