@@ -1,8 +1,24 @@
 #include "so_long.h"
 
+void	map_free()
+{
+	int i;
+
+	i = 0;
+	while(i < g_globs.mapHeight)
+	{
+		free(g_globs.map[i]);
+		++i;
+	}
+	free(g_globs.map);
+}
+
 int	so_close()
 {
-	system("killall afplay");
+	if (g_globs.killcheck)
+		system("killall afplay");
+	if (g_globs.map)
+		map_free();
 	exit(0);
 	return (0);
 }
@@ -53,6 +69,7 @@ void end_of_game(int a)
 			exit (0);
 		}
 	}
+	g_globs.killcheck = 1;
 	mlx_put_image_to_window(vars.mlxend, vars.mlx_winend, g_globs.end.img, 0, 0);
 	mlx_hook(vars.mlx_winend, 2, 1L << 0, key_press, 0);
 }
@@ -160,6 +177,7 @@ void	glob_init(int argc, char **argv)
 	g_globs.Ecount = 0;
 	g_globs.Ccount = 0;
 	g_globs.blocker = 0;
+	g_globs.killcheck = 0;
 	parser(argc, argv);
 	g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
 	g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
@@ -187,6 +205,8 @@ int	frame()
 	mlx_clear_window(vars.mlx, vars.mlx_win);
 	draw_image();
 	mlx_put_image_to_window(vars.mlx, vars.mlx_win, g_globs.data.img, 0, 0);
+	mlx_string_put(vars.mlx, vars.mlx_win, 20, 20, 0x000000, "Steps count : ");
+	mlx_string_put(vars.mlx, vars.mlx_win, 160, 20, 0x000000, ft_itoa(g_globs.steps));
 	return (0);
 }
 
@@ -196,11 +216,30 @@ int	main(int argc, char **argv)
 	int W,H, texW, texH;
 	vars.mlx = mlx_init();
 	mlx_get_screen_size(vars.mlx, &W, &H);
-	printf("h - %d, w - %d\n", H, W);
-	if (g_globs.mapHeight > 22 && g_globs.mapWidth > 42)
+	if (g_globs.mapHeight > 22 && g_globs.mapWidth > 41)
 	{
 		g_globs.screenWidth = W;
 		g_globs.screenHeight = H;
+		if (g_globs.screenHeight > g_globs.screenWidth)
+			g_globs.side = g_globs.screenHeight / g_globs.mapHeight;
+		else
+			g_globs.side = g_globs.screenWidth / g_globs.mapWidth;
+		g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
+		g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
+	}
+	else if (g_globs.mapHeight > 22)
+	{
+		g_globs.screenHeight = H;
+		g_globs.side = g_globs.screenHeight / g_globs.mapHeight;
+		g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
+		g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
+	}
+	else if (g_globs.mapWidth > 42)
+	{
+		g_globs.screenWidth = W;
+		g_globs.side = g_globs.screenWidth / g_globs.mapWidth;
+		g_globs.screenHeight = g_globs.side * g_globs.mapHeight;
+		g_globs.screenWidth = g_globs.side * g_globs.mapWidth;
 	}
 	vars.mlx_win = mlx_new_window(vars.mlx, g_globs.screenWidth, g_globs.screenHeight, "so_long");
 	g_globs.data.img = mlx_new_image(vars.mlx, g_globs.screenWidth, g_globs.screenHeight);

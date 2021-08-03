@@ -68,7 +68,7 @@ void	draw_image()
 		while (j < g_globs.mapWidth)
 		{
 			if (g_globs.map[i][j] == '1')
-				draw_tex(j, i, &g_globs.wallTEX); // 0x00C39B77
+				draw_tex(j, i, &g_globs.wallTEX);
 			if (g_globs.map[i][j] == '0')
 				draw_square(j, i, 0x00d3d3d3);
 			if (g_globs.map[i][j] == 'E')

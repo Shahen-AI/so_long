@@ -55,6 +55,7 @@ struct s_parsing
 	int		Ccount;
 	int		Ecount;
 	int		blocker;
+	int		killcheck;
 }			g_globs;
 
 void	parser(int argc, char **argv);
@@ -67,5 +68,6 @@ void	ft_putstr(char *str);
 void	ft_putchar(char c);
 int		ft_strlen(char *str);
 void	ft_putnbr(int nb);
+char	*ft_itoa(int n);
 
 #endif
